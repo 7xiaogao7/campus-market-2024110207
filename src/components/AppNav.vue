@@ -13,7 +13,10 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { to: '/home', label: '首页' },
-  { to: '/list', label: '列表' },
+  { to: '/trade', label: '二手交易' },
+  { to: '/lostfound', label: '失物招领' },
+  { to: '/groupbuy', label: '拼单搭子' },
+  { to: '/errand', label: '跑腿委托' },
   { to: '/board', label: '看板' },
   { to: '/publish', label: '发布', requireAuth: true },
   { to: '/message', label: '消息', requireAuth: true },

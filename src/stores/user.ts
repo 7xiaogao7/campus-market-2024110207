@@ -133,7 +133,7 @@ export const useUserStore = defineStore('user', () => {
       text: '恭喜！你发布的「高等数学同济第8版」已成功<b>售出</b>，收款 ¥25',
       time: '3 小时前',
       color: '#F56C6C',
-      link: '/list',
+      link: '/trade',
     },
     {
       icon: '⭐',
@@ -154,7 +154,7 @@ export const useUserStore = defineStore('user', () => {
       text: '你发布的「寻找丢失的校园卡」已确认 <b>找到失主</b>，奖励积分 +20',
       time: '昨天 21:48',
       color: '#67C23A',
-      link: '/list',
+      link: '/lostfound',
     },
     {
       icon: '📝',
@@ -168,7 +168,7 @@ export const useUserStore = defineStore('user', () => {
       text: '你发起的拼单「喜茶满 50 减 20」已凑单成功，人均仅 ¥18！',
       time: '3 天前',
       color: '#67C23A',
-      link: '/list',
+      link: '/groupbuy',
     },
     {
       icon: '⭐',

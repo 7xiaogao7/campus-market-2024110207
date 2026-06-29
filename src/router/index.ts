@@ -28,11 +28,6 @@ const router = createRouter({
       meta: { guestOnly: true },
     },
     {
-      path: '/list',
-      name: 'List',
-      component: () => import('@/views/ListView.vue'),
-    },
-    {
       path: '/detail/:id',
       name: 'Detail',
       component: () => import('@/views/DetailView.vue'),
@@ -66,6 +61,26 @@ const router = createRouter({
       path: '/board',
       name: 'Board',
       component: () => import('@/views/BoardView.vue'),
+    },
+    {
+      path: '/trade',
+      name: 'Trade',
+      component: () => import('@/views/TradeView.vue'),
+    },
+    {
+      path: '/lostfound',
+      name: 'LostFound',
+      component: () => import('@/views/LostFoundView.vue'),
+    },
+    {
+      path: '/groupbuy',
+      name: 'GroupBuy',
+      component: () => import('@/views/GroupBuyView.vue'),
+    },
+    {
+      path: '/errand',
+      name: 'Errand',
+      component: () => import('@/views/ErrandView.vue'),
     },
     {
       path: '/:pathMatch(.*)*',

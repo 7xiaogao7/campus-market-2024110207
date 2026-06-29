@@ -12,9 +12,9 @@ const acts = computed<ActivityItem[]>(() => userStore.RECENT_ACTIVITY)
 const stats = computed(() => [
   { key: 'pub', label: '📝 发布数', value: u.value?.published ?? 0, color: '#409EFF', to: '/publish' },
   { key: 'fav', label: '⭐ 收藏数', value: userStore.favoritesCount, color: '#F56C6C', to: '/favorites' },
-  { key: 'trade', label: '💰 成交数', value: 18, color: '#67C23A', to: '/list' },
-  { key: 'run', label: '🏃 跑腿数', value: 12, color: '#9B59B6', to: '/list' },
-  { key: 'find', label: '🔍 帮找回', value: 3, color: '#E6A23C', to: '/list' },
+  { key: 'trade', label: '💰 成交数', value: 18, color: '#67C23A', to: '/trade' },
+  { key: 'run', label: '🏃 跑腿数', value: 12, color: '#9B59B6', to: '/errand' },
+  { key: 'find', label: '🔍 帮找回', value: 3, color: '#E6A23C', to: '/lostfound' },
   { key: 'score', label: '🌟 好评数', value: '4.98', color: '#67C23A', to: '/message' },
 ])
 
@@ -40,10 +40,10 @@ const recentPublished = [
     title: '拾到钥匙一串',
     price: '拾到',
     tag: '✅ 已归还失主',
-    to: '/list',
+    to: '/lostfound',
     priceColor: '#E6A23C',
   },
-  { icon: '🍵', title: '喜茶满50-20 还差1人', price: '人均 ¥18', tag: '⏰ 进行中', to: '/list', priceColor: '#67C23A' },
+  { icon: '🍵', title: '喜茶满50-20 还差1人', price: '人均 ¥18', tag: '⏰ 进行中', to: '/groupbuy', priceColor: '#67C23A' },
 ]
 
 const achievements = [
@@ -84,10 +84,10 @@ const sideGroups: SideGroup[] = [
   {
     title: '交易与任务',
     items: [
-      { icon: '🛒', label: '我购买的', to: '/list' },
-      { icon: '💰', label: '我出售的', to: '/list' },
-      { icon: '🏃', label: '我的跑腿', to: '/list' },
-      { icon: '👥', label: '我的拼单', to: '/list' },
+      { icon: '🛒', label: '我购买的', to: '/trade' },
+      { icon: '💰', label: '我出售的', to: '/trade' },
+      { icon: '🏃', label: '我的跑腿', to: '/errand' },
+      { icon: '👥', label: '我的拼单', to: '/groupbuy' },
     ],
   },
   {

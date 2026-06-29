@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import EmptyState from '@/components/EmptyState.vue'
 import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
@@ -69,12 +70,13 @@ function goBackProfile() {
 
     <div v-if="toastMsg" class="toast" :class="toastType">{{ toastMsg }}</div>
 
-    <div v-if="userStore.favoritesCount === 0" class="empty-box">
-      <div class="empty-emoji">💫</div>
-      <div class="empty-title">收藏夹空空如也</div>
-      <div class="empty-desc">去列表页逛一逛，遇到心动的好物点一下爱心就好啦～</div>
-      <button class="btn btn-primary btn-lg" @click="router.push('/list')">去逛逛列表</button>
-    </div>
+    <EmptyState
+      v-if="userStore.favoritesCount === 0"
+      icon="⭐"
+      text="收藏夹空空如也，去逛逛遇到心动的好物点爱心收藏吧～"
+    >
+      <button class="btn btn-primary btn-lg" @click="router.push('/trade')">去逛逛二手市场</button>
+    </EmptyState>
 
     <div v-else class="fav-list">
       <div
@@ -274,34 +276,6 @@ function goBackProfile() {
     transform: translateY(0);
     opacity: 1;
   }
-}
-
-.empty-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  padding: 80px 20px;
-  background: #fff;
-  border: 1px dashed #dcdfe6;
-  border-radius: 14px;
-}
-
-.empty-emoji {
-  font-size: 64px;
-  line-height: 1;
-}
-
-.empty-title {
-  font-size: 20px;
-  color: #303133;
-  font-weight: 600;
-}
-
-.empty-desc {
-  color: #909399;
-  font-size: 14px;
 }
 
 .fav-list {

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+import EmptyState from '@/components/EmptyState.vue'
+
 interface Message {
   id: number
   from: string
@@ -6,6 +9,8 @@ interface Message {
   time: string
   unread: boolean
 }
+
+const router = useRouter()
 
 const messages: Message[] = [
   { id: 1, from: '计算机学院_小王', content: '你好，iPad 还在吗？能少 100 吗？', time: '10 分钟前', unread: true },
@@ -39,9 +44,9 @@ const unreadCount = messages.filter((m) => m.unread).length
       </li>
     </ul>
 
-    <div v-if="messages.length === 0" class="empty">
-      暂无消息
-    </div>
+    <EmptyState v-if="messages.length === 0" icon="💬" text="暂无消息，去逛逛市场和同学们聊聊吧～">
+      <button class="btn-primary" @click="router.push('/trade')">🛒 去逛逛市场</button>
+    </EmptyState>
   </div>
 </template>
 
@@ -150,12 +155,23 @@ const unreadCount = messages.filter((m) => m.unread).length
   align-self: center;
 }
 
-.empty {
-  padding: 60px;
-  text-align: center;
-  color: #909399;
-  background: #fff;
-  border: 1px dashed #e8ecf2;
-  border-radius: 10px;
+.btn-primary {
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #409eff, #66b1ff);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
 }
 </style>

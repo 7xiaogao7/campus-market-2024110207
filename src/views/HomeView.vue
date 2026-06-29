@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const quickLinks = [
-  { label: '逛一逛商品', path: '/list', desc: '查看学长学姐的闲置好物', icon: '🛍️' },
+  { label: '逛一逛商品', path: '/trade', desc: '查看学长学姐的闲置好物', icon: '🛍️' },
   { label: '发布闲置', path: '/publish', desc: '把用不上的东西变现', icon: '📤' },
   { label: '查看消息', path: '/message', desc: '不错过任何咨询', icon: '💬' },
   { label: '数据看板', path: '/board', desc: '平台整体数据概览', icon: '📊' },
