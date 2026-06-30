@@ -12,6 +12,12 @@ export interface LostFoundItem {
   description: string
 }
 
+export type CreateLostFoundPayload = Omit<LostFoundItem, 'id'>
+
 export function getLostFounds() {
   return http.get<LostFoundItem[]>('/lostFounds')
+}
+
+export function createLostFound(payload: CreateLostFoundPayload) {
+  return http.post<LostFoundItem>('/lostFounds', payload)
 }

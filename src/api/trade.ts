@@ -14,6 +14,15 @@ export interface TradeItem {
   description: string
 }
 
+export type CreateTradePayload = Omit<TradeItem, 'id' | 'publisher'>
+
 export function getTrades() {
   return http.get<TradeItem[]>('/trades')
+}
+
+export function createTrade(payload: CreateTradePayload) {
+  return http.post<TradeItem>('/trades', {
+    ...payload,
+    publisher: '校园用户'
+  })
 }

@@ -69,11 +69,19 @@ const router = createRouter({
     },
     {
       path: '/lostfound',
+      redirect: '/lost-found',
+    },
+    {
+      path: '/lost-found',
       name: 'LostFound',
       component: () => import('@/views/LostFoundView.vue'),
     },
     {
       path: '/groupbuy',
+      redirect: '/group-buy',
+    },
+    {
+      path: '/group-buy',
       name: 'GroupBuy',
       component: () => import('@/views/GroupBuyView.vue'),
     },

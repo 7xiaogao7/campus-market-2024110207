@@ -1,7 +1,7 @@
 {
   "trades": [
     {
-      "id": 1,
+      "id": "1",
       "title": "九成新机械键盘",
       "category": "数码配件",
       "price": 89,
@@ -14,7 +14,7 @@
       "description": "键盘使用正常，因更换设备转让。"
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "高等数学教材",
       "category": "教材资料",
       "price": 18,
@@ -27,7 +27,7 @@
       "description": "教材有少量笔记，不影响使用。"
     },
     {
-      "id": 3,
+      "id": "3",
       "title": "iPad Air 5 256G 带笔",
       "category": "电子数码",
       "price": 3299,
@@ -40,7 +40,7 @@
       "description": "带原装充电器和一代 Apple Pencil，屏幕无划痕，带保护壳。"
     },
     {
-      "id": 4,
+      "id": "4",
       "title": "小米电动滑板车 1S",
       "category": "生活用品",
       "price": 899,
@@ -53,7 +53,7 @@
       "description": "续航约 20 公里，毕业出售，校园代步神器。"
     },
     {
-      "id": 5,
+      "id": "5",
       "title": "全新未拆封小米手环 8",
       "category": "数码配件",
       "price": 229,
@@ -66,7 +66,7 @@
       "description": "京东购入，全新未拆封，支持 NFC，原价 279，因生日收了两个转一个。"
     },
     {
-      "id": 6,
+      "id": "6",
       "title": "耐克 Air Force 1 42 码",
       "category": "服饰鞋包",
       "price": 299,
@@ -79,7 +79,7 @@
       "description": "正品闲置，只穿过 3 次，鞋盒小票齐全。"
     },
     {
-      "id": 7,
+      "id": "7",
       "title": "罗技 G304 无线鼠标",
       "category": "数码配件",
       "price": 119,
@@ -92,7 +92,7 @@
       "description": "自用半年，打游戏定位准，续航超长，送全新接收器电池。"
     },
     {
-      "id": 8,
+      "id": "8",
       "title": "线性代数同济第六版",
       "category": "教材资料",
       "price": 12,
@@ -105,7 +105,7 @@
       "description": "有笔记但整理得很清晰，期末必过！送课后习题答案电子版。"
     },
     {
-      "id": 9,
+      "id": "9",
       "title": "小米台灯 Pro",
       "category": "生活用品",
       "price": 79,
@@ -118,7 +118,7 @@
       "description": "护眼台灯，多档亮度色温可调，USB 充电，学习必备。"
     },
     {
-      "id": 10,
+      "id": "10",
       "title": "优衣库纯棉 T 恤 M 码",
       "category": "服饰鞋包",
       "price": 35,
@@ -129,11 +129,24 @@
       "image": "",
       "status": "open",
       "description": "买多了一件，白色基础款，百搭不过时，吊牌未拆，原价 99。"
+    },
+    {
+      "title": "物理书",
+      "category": "教材资料",
+      "price": 14.99,
+      "condition": "九成新",
+      "location": "东四",
+      "publishTime": "2026-06-30 11:45",
+      "image": "",
+      "status": "open",
+      "description": "很新",
+      "publisher": "校园用户",
+      "id": "Kct-toH1MuY"
     }
   ],
   "lostFounds": [
     {
-      "id": 1,
+      "id": "1",
       "title": "寻找黑色校园卡",
       "type": "lost",
       "itemName": "校园卡",
@@ -144,7 +157,7 @@
       "description": "校园卡卡套为黑色，内有学生证。"
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "拾到蓝色雨伞",
       "type": "found",
       "itemName": "雨伞",
@@ -155,7 +168,7 @@
       "description": "雨伞放在 A 区一楼值班室。"
     },
     {
-      "id": 3,
+      "id": "3",
       "title": "寻找银色 AirPods Pro",
       "type": "lost",
       "itemName": "耳机",
@@ -166,7 +179,7 @@
       "description": "白色充电盒有小黄人贴纸，拾到者重金酬谢！"
     },
     {
-      "id": 4,
+      "id": "4",
       "title": "拾到黑色双肩书包",
       "type": "found",
       "itemName": "书包",
@@ -177,7 +190,7 @@
       "description": "书包内有笔记本和水杯，暂存于体育馆门卫室。"
     },
     {
-      "id": 5,
+      "id": "5",
       "title": "寻找遗失的灰色兔耳伞",
       "type": "lost",
       "itemName": "雨伞",
@@ -188,7 +201,7 @@
       "description": "灰色长柄伞，伞柄有一对兔耳朵装饰，是好朋友送的生日礼物，非常重要！"
     },
     {
-      "id": 6,
+      "id": "6",
       "title": "拾到学生证（计算机学院）",
       "type": "found",
       "itemName": "学生证",
@@ -199,7 +212,7 @@
       "description": "学生证姓名为两个字，计算机学院，请失主带身份验证领取。"
     },
     {
-      "id": 7,
+      "id": "7",
       "title": "寻找粉色保温杯",
       "type": "lost",
       "itemName": "保温杯",
@@ -210,7 +223,7 @@
       "description": "膳魔师粉色保温杯，杯身贴有 LINE FRIENDS 贴纸，对我很重要！"
     },
     {
-      "id": 8,
+      "id": "8",
       "title": "拾到一副黑框眼镜",
       "type": "found",
       "itemName": "眼镜",
@@ -221,7 +234,7 @@
       "description": "黑框近视眼镜，度数不详，已交图书馆一楼服务台保管。"
     },
     {
-      "id": 9,
+      "id": "9",
       "title": "寻找白色充电宝",
       "type": "lost",
       "itemName": "充电宝",
@@ -232,7 +245,7 @@
       "description": "小米 20000mAh 白色充电宝，有一角摔痕，里面有重要充电线一起丢失。"
     },
     {
-      "id": 10,
+      "id": "10",
       "title": "拾到一串门禁卡",
       "type": "found",
       "itemName": "门禁卡",
@@ -245,7 +258,7 @@
   ],
   "groupBuys": [
     {
-      "id": 1,
+      "id": "1",
       "title": "周五晚火锅拼单",
       "type": "拼餐",
       "targetCount": 6,
@@ -257,7 +270,7 @@
       "description": "AA 制，人数够后统一预约。"
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "四六级资料团购",
       "type": "学习资料",
       "targetCount": 10,
@@ -269,7 +282,7 @@
       "description": "达到人数后统一下单。"
     },
     {
-      "id": 3,
+      "id": "3",
       "title": "喜茶满 50 减 20 拼单",
       "type": "拼餐",
       "targetCount": 4,
@@ -281,7 +294,7 @@
       "description": "已点 2 杯，还差 2 人，到宿舍楼下分。"
     },
     {
-      "id": 4,
+      "id": "4",
       "title": "毕业照服装租赁团购",
       "type": "生活用品",
       "targetCount": 20,
@@ -293,7 +306,7 @@
       "description": "学士服 + 领结/领花，2 天 35 元/套，满 20 人再减 5 元。"
     },
     {
-      "id": 5,
+      "id": "5",
       "title": "美团奶茶 100 减 50 拼单",
       "type": "拼餐",
       "targetCount": 5,
@@ -305,7 +318,7 @@
       "description": "茶百道/古茗/沪上阿姨都可以，凑满 100 减 50，人均超便宜！"
     },
     {
-      "id": 6,
+      "id": "6",
       "title": "端午嘉兴粽子团购",
       "type": "拼餐",
       "targetCount": 30,
@@ -317,7 +330,7 @@
       "description": "鲜肉粽 + 豆沙粽 + 蜜枣粽，10 只装原价 60 现 39.9，含保温箱配送。"
     },
     {
-      "id": 7,
+      "id": "7",
       "title": "山姆会员店瑞士卷拼单",
       "type": "拼餐",
       "targetCount": 4,
@@ -329,7 +342,7 @@
       "description": "山姆 1.2kg 原味+伯爵茶瑞士卷，一份 16 块太多吃不完，拼每人 4 块 28 元。"
     },
     {
-      "id": 8,
+      "id": "8",
       "title": "考研政治全家桶团购",
       "type": "学习资料",
       "targetCount": 25,
@@ -341,7 +354,7 @@
       "description": "肖秀荣 1000 题 + 精讲精练 + 肖四肖八，市场价 268，满 25 人团价 169，正版速发。"
     },
     {
-      "id": 9,
+      "id": "9",
       "title": "校园卡手机 NFC 贴团购",
       "type": "生活用品",
       "targetCount": 50,
@@ -353,7 +366,7 @@
       "description": "超薄 NFC 贴片，手机背贴即可刷校园卡，测试完美兼容，单张 15 元，满 50 张 9.9。"
     },
     {
-      "id": 10,
+      "id": "10",
       "title": "密室逃脱毕业季团拼",
       "type": "拼玩",
       "targetCount": 8,
@@ -367,7 +380,7 @@
   ],
   "errands": [
     {
-      "id": 1,
+      "id": "1",
       "title": "帮取快递到宿舍楼下",
       "taskType": "取快递",
       "reward": 3,
@@ -379,7 +392,7 @@
       "description": "快递较轻，送到宿舍楼下即可。"
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "帮买一份晚餐",
       "taskType": "代买",
       "reward": 5,
@@ -391,7 +404,7 @@
       "description": "需要在 18:30 前送到。"
     },
     {
-      "id": 3,
+      "id": "3",
       "title": "代排队图书馆占座 1 个",
       "taskType": "代排队",
       "reward": 6,
@@ -403,7 +416,7 @@
       "description": "明早 7:40 前帮占 1 个靠窗座位，放书包即可。"
     },
     {
-      "id": 4,
+      "id": "4",
       "title": "东区到北区代送文件袋",
       "taskType": "代送",
       "reward": 4,
@@ -415,7 +428,7 @@
       "description": "文件袋轻便，需签到领取，请 10:30 前送达。"
     },
     {
-      "id": 5,
+      "id": "5",
       "title": "帮忙打印 10 页论文到教室",
       "taskType": "代办",
       "reward": 5,
@@ -427,7 +440,7 @@
       "description": "已经上传文件到打印店了，付完钱取出来送到教室，下午有答辩要用到！"
     },
     {
-      "id": 6,
+      "id": "6",
       "title": "帮从快递站搬大件到宿舍",
       "taskType": "取快递",
       "reward": 15,
@@ -439,7 +452,7 @@
       "description": "洗衣机包装箱（10kg 左右），到 6 楼，男生优先，含矿泉水一瓶！"
     },
     {
-      "id": 7,
+      "id": "7",
       "title": "代取中药并送到校医院",
       "taskType": "代办",
       "reward": 10,
@@ -451,7 +464,7 @@
       "description": "已预约好只需凭手机号取药，中药已付款，送护士站即可，万分感谢！"
     },
     {
-      "id": 8,
+      "id": "8",
       "title": "帮买三食堂早餐",
       "taskType": "代买",
       "reward": 3,
@@ -463,7 +476,7 @@
       "description": "2 个肉包子 + 1 杯豆浆（温），费用另算，7:50 前放门口就行。"
     },
     {
-      "id": 9,
+      "id": "9",
       "title": "代取顺丰冷链快递",
       "taskType": "取快递",
       "reward": 6,
@@ -475,7 +488,7 @@
       "description": "生鲜冷链快递，务必 15:00 营业点下班前去取，可提供取件码，感谢！"
     },
     {
-      "id": 10,
+      "id": "10",
       "title": "周末代喂宿舍仓鼠一只",
       "taskType": "代办",
       "reward": 20,
@@ -486,5 +499,6 @@
       "status": "open",
       "description": "两天喂食换水就行，鼠鼠很乖不咬人，食物和说明都备好，可进门用备用钥匙。"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
