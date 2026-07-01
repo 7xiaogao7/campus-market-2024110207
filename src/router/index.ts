@@ -99,13 +99,13 @@ const router = createRouter({
 
 router.beforeEach((to) => {
   const userStore = useUserStore()
-  if (to.meta.requiresAuth && !userStore.isLoggedIn) {
+  if (to.meta.requiresAuth && !userStore.user.isLoggedIn) {
     return {
       path: '/login',
       query: { redirect: to.fullPath },
     }
   }
-  if (to.meta.guestOnly && userStore.isLoggedIn) {
+  if (to.meta.guestOnly && userStore.user.isLoggedIn) {
     return '/home'
   }
   return true

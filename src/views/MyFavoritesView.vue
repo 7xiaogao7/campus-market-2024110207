@@ -2,10 +2,17 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import EmptyState from '@/components/EmptyState.vue'
-import { useUserStore } from '@/stores/user'
+import { useFavoriteStore, type FavoriteItem, type FavoriteType } from '@/stores/favorite'
 
 const router = useRouter()
-const userStore = useUserStore()
+const favoriteStore = useFavoriteStore()
+
+const typeLabelMap: Record<FavoriteType, { label: string; icon: string; path: string }> = {
+  trade: { label: '二手交易', icon: '🛒', path: '/trade' },
+  lostFound: { label: '失物招领', icon: '🔍', path: '/lostfound' },
+  groupBuy: { label: '拼单搭子', icon: '👥', path: '/groupbuy' },
+  errand: { label: '跑腿委托', icon: '🏃', path: '/errand' },
+}
 
 const toastMsg = ref('')
 const toastType = ref<'success' | 'info' | 'warn'>('info')
@@ -20,25 +27,26 @@ function showToast(msg: string, type: 'success' | 'info' | 'warn' = 'info') {
   }, 2200)
 }
 
-function goDetail(id: number, e?: MouseEvent) {
+function goDetail(item: FavoriteItem, e?: MouseEvent) {
   if (e) e.stopPropagation()
-  router.push(`/detail/${id}`)
+  const info = typeLabelMap[item.type]
+  router.push({ path: `/detail/${item.id}`, query: { from: info.path } })
 }
 
-function doRemove(id: number, title: string, e: MouseEvent) {
+function doRemove(item: FavoriteItem, e: MouseEvent) {
   e.stopPropagation()
-  if (!confirm(`确定取消收藏「${title}」吗？`)) return
-  const r = userStore.removeFavorite(id)
+  if (!confirm(`确定取消收藏「${item.title}」吗？`)) return
+  const r = favoriteStore.removeFavorite(item.type, item.id)
   showToast(r.msg, r.ok ? 'success' : 'warn')
 }
 
 function doClearAll() {
-  if (userStore.favoritesCount === 0) {
+  if (favoriteStore.favoriteCount === 0) {
     showToast('当前没有收藏内容', 'warn')
     return
   }
-  if (!confirm(`确定清空全部 ${userStore.favoritesCount} 条收藏吗？此操作无法撤销。`)) return
-  const r = userStore.clearAllFavorites()
+  if (!confirm(`确定清空全部 ${favoriteStore.favoriteCount} 条收藏吗？此操作无法撤销。`)) return
+  const r = favoriteStore.clearAllFavorites()
   showToast(r.msg, r.ok ? 'success' : 'warn')
 }
 
@@ -50,59 +58,58 @@ function goBackProfile() {
 <template>
   <div class="fav-page">
     <div class="top-bar">
-      <div class="left-area">
-        <button class="back-btn" @click="goBackProfile" title="返回个人中心">← 返回</button>
-        <div>
-          <h1>⭐ 我的收藏</h1>
-          <p class="sub">共收藏了 <b>{{ userStore.favoritesCount }}</b> 条内容，可随时查看感兴趣的好物</p>
-        </div>
-      </div>
-      <div class="right-area">
-        <button
-          class="btn btn-ghost"
-          :disabled="userStore.favoritesCount === 0"
-          @click="doClearAll"
-        >
-          🗑️ 清空收藏夹
-        </button>
+    <div class="left-area">
+      <button class="back-btn" @click="goBackProfile" title="返回个人中心">← 返回</button>
+      <div>
+        <h1>⭐ 我的收藏</h1>
+        <p class="sub">共收藏了 <b>{{ favoriteStore.favoriteCount }}</b> 条内容，可随时查看感兴趣的好物</p>
       </div>
     </div>
-
-    <div v-if="toastMsg" class="toast" :class="toastType">{{ toastMsg }}</div>
-
-    <EmptyState
-      v-if="userStore.favoritesCount === 0"
-      icon="⭐"
-      text="收藏夹空空如也，去逛逛遇到心动的好物点爱心收藏吧～"
-    >
-      <button class="btn btn-primary btn-lg" @click="router.push('/trade')">去逛逛二手市场</button>
-    </EmptyState>
-
-    <div v-else class="fav-list">
-      <div
-        v-for="item in userStore.favorites"
-        :key="item.id"
-        class="fav-item"
-        @click="goDetail(item.id)"
+    <div class="right-area">
+      <button
+        class="btn btn-ghost"
+        :disabled="favoriteStore.favoriteCount === 0"
+        @click="doClearAll"
       >
-        <div class="fav-body">
-          <div class="meta-row">
-            <span class="cat-tag">{{ item.category }}</span>
-            <span class="time-tag">收藏于 {{ item.favAt }}</span>
-          </div>
-          <div class="title-row">
-            <h3 class="title">{{ item.title }}</h3>
-            <span class="price">¥{{ item.price }}</span>
-          </div>
-          <p class="desc">{{ item.desc }}</p>
-          <p class="id-line">商品编号：#{{ item.id }}</p>
+        🗑️ 清空收藏夹
+      </button>
+    </div>
+  </div>
+
+  <div v-if="toastMsg" class="toast" :class="toastType">{{ toastMsg }}</div>
+
+  <EmptyState
+    v-if="favoriteStore.favoriteCount === 0"
+    icon="⭐"
+    text="收藏夹空空如也，去逛逛遇到心动的好物点爱心收藏吧～"
+  >
+    <button class="btn btn-primary btn-lg" @click="router.push('/trade')">去逛逛二手市场</button>
+  </EmptyState>
+
+  <div v-else class="fav-list">
+    <div
+      v-for="item in favoriteStore.favorites"
+      :key="`${item.type}-${item.id}`"
+      class="fav-item"
+      @click="goDetail(item)"
+    >
+      <div class="fav-body">
+        <div class="meta-row">
+          <span class="cat-tag">{{ typeLabelMap[item.type].icon }} {{ typeLabelMap[item.type].label }}</span>
+          <span class="time-tag">📍 {{ item.location }}</span>
         </div>
-        <div class="fav-actions">
-          <button class="btn btn-primary btn-sm" @click="goDetail(item.id, $event)">📖 查看详情</button>
-          <button class="btn btn-danger-ghost btn-sm" @click="doRemove(item.id, item.title, $event)">💔 取消收藏</button>
+        <div class="title-row">
+          <h3 class="title">{{ item.title }}</h3>
         </div>
+        <p class="desc">{{ item.description }}</p>
+        <p class="id-line">内容编号：#{{ item.id }}</p>
+      </div>
+      <div class="fav-actions">
+        <button class="btn btn-primary btn-sm" @click="goDetail(item, $event)">📖 查看详情</button>
+        <button class="btn btn-danger-ghost btn-sm" @click="doRemove(item, $event)">💔 取消收藏</button>
       </div>
     </div>
+  </div>
   </div>
 </template>
 

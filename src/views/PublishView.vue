@@ -6,10 +6,12 @@ import { createTrade, type CreateTradePayload } from '@/api/trade'
 import { createLostFound, type CreateLostFoundPayload } from '@/api/lostFound'
 import { createGroupBuy, type CreateGroupBuyPayload } from '@/api/groupBuy'
 import { createErrand, type CreateErrandPayload } from '@/api/errand'
+import { useUserStore } from '@/stores/user'
 
 type PublishType = 'trade' | 'lostFound' | 'groupBuy' | 'errand'
 
 const router = useRouter()
+const userStore = useUserStore()
 const publishType = ref<PublishType>('trade')
 const submitting = ref(false)
 const toastMsg = ref('')
@@ -196,6 +198,7 @@ async function handleSubmit() {
           image: '',
           status: 'open',
           description: form.description.trim(),
+          publisher: userStore.displayName,
         }
         const res = await createTrade(payload)
         successMsg = `✅ 二手发布成功，ID=${res.data.id}`
@@ -229,6 +232,7 @@ async function handleSubmit() {
           location: form.location.trim(),
           status: 'open',
           description: form.description.trim(),
+          publisher: userStore.displayName,
         }
         const res = await createGroupBuy(payload)
         successMsg = `✅ 拼单发布成功，ID=${res.data.id}`
@@ -245,6 +249,7 @@ async function handleSubmit() {
           deadline: toDisplayDateTime(form.deadline),
           status: 'open',
           description: form.description.trim(),
+          publisher: userStore.displayName,
         }
         const res = await createErrand(payload)
         successMsg = `✅ 跑腿发布成功，ID=${res.data.id}`

@@ -3,6 +3,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { computed, onMounted, ref, watch } from 'vue'
 import EmptyState from '@/components/EmptyState.vue'
 import { useUserStore } from '@/stores/user'
+import { useFavoriteStore, type FavoriteItem, type FavoriteType } from '@/stores/favorite'
 import { getTrades, type TradeItem } from '@/api/trade'
 import { getLostFounds, type LostFoundItem } from '@/api/lostFound'
 import { getGroupBuys, type GroupBuyItem } from '@/api/groupBuy'
@@ -68,6 +69,7 @@ const FALLBACK = {
 const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
+const favoriteStore = useFavoriteStore()
 
 const productIdNum = computed(() => Number(route.params.id))
 const loading = ref(false)
@@ -87,6 +89,13 @@ const pathToModule: Record<string, AnyItem['__module']> = {
   '/lostfound': 'lostfound',
   '/groupbuy': 'groupbuy',
   '/errand': 'errand',
+}
+
+const moduleToFavType: Record<AnyItem['__module'], FavoriteType> = {
+  trade: 'trade',
+  lostfound: 'lostFound',
+  groupbuy: 'groupBuy',
+  errand: 'errand',
 }
 
 function buildFallbackAll(): AnyItem[] {
@@ -165,28 +174,32 @@ onMounted(loadItem)
 watch(() => route.params.id, loadItem)
 
 const moduleInfo = computed(() => (item.value ? moduleLabelMap[item.value.__module] : null))
-const isFavored = computed(() => (item.value ? userStore.isFavorited(item.value.id) : false))
+const detailFavType = computed<FavoriteType | null>(() =>
+  item.value ? moduleToFavType[item.value.__module] : null,
+)
+const isFavored = computed(() =>
+  item.value && detailFavType.value
+    ? favoriteStore.isFavorite(detailFavType.value, item.value.id)
+    : false,
+)
 const fromList = computed(() => {
   if (route.query.from) return route.query.from as string
   return moduleInfo.value?.path ?? '/home'
 })
-const favoriteItemForStore = computed(() => {
-  if (!item.value || !moduleInfo.value) return null
-  const price =
-    'price' in item.value
-      ? item.value.price
-      : 'reward' in item.value
-        ? item.value.reward
-        : 0
-  const pub = 'publisher' in item.value ? item.value.publisher : '校园同学'
+const favoriteItemForStore = computed<FavoriteItem | null>(() => {
+  if (!item.value || !detailFavType.value) return null
+  const loc =
+    'location' in item.value
+      ? item.value.location
+      : 'from' in item.value
+        ? item.value.from
+        : '主校区'
   return {
+    type: detailFavType.value,
     id: item.value.id,
     title: item.value.title,
-    category: moduleInfo.value.label,
-    price,
-    desc: item.value.description,
-    publisher: pub,
-    module: moduleInfo.value.path,
+    description: item.value.description,
+    location: loc,
   }
 })
 
@@ -204,7 +217,7 @@ function showToast(msg: string, type: 'success' | 'info' | 'warn' = 'info') {
 
 function handleToggleFav() {
   if (!item.value || !favoriteItemForStore.value) return
-  if (!userStore.isLoggedIn) {
+  if (!userStore.user.isLoggedIn) {
     showToast('请先登录后再收藏哦～', 'warn')
     setTimeout(() => {
       router.push({
@@ -214,12 +227,12 @@ function handleToggleFav() {
     }, 800)
     return
   }
-  const r = userStore.toggleFavorite(favoriteItemForStore.value)
+  const r = favoriteStore.toggleFavorite(favoriteItemForStore.value)
   showToast(r.msg, r.ok ? 'success' : 'warn')
 }
 
 function contactPublisher() {
-  if (!userStore.isLoggedIn) {
+  if (!userStore.user.isLoggedIn) {
     showToast('请先登录再联系发布者哦～', 'warn')
     setTimeout(() => {
       router.push({

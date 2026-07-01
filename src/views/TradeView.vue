@@ -4,27 +4,12 @@ import { useRouter } from 'vue-router'
 import ItemCard from '@/components/ItemCard.vue'
 import EmptyState from '@/components/EmptyState.vue'
 import { getTrades, type TradeItem } from '@/api/trade'
-import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
-const userStore = useUserStore()
 
 const loading = ref(false)
 const error = ref('')
 const trades = ref<TradeItem[]>([])
-
-const toastMsg = ref('')
-const toastType = ref<'success' | 'info' | 'warn'>('info')
-let toastTimer: number | null = null
-
-function showToast(msg: string, type: 'success' | 'info' | 'warn' = 'info') {
-  toastMsg.value = msg
-  toastType.value = type
-  if (toastTimer) window.clearTimeout(toastTimer)
-  toastTimer = window.setTimeout(() => {
-    toastMsg.value = ''
-  }, 2200)
-}
 
 const FALLBACK_TRADES: TradeItem[] = [
   { id: 1, title: '九成新机械键盘', category: '数码配件', price: 89, condition: '九成新', location: '东区宿舍', publisher: '软件工程 2023 级学生', publishTime: '2026-06-01 10:20', image: '', status: 'open', description: '键盘使用正常，因更换设备转让。' },
@@ -58,30 +43,6 @@ onMounted(loadData)
 function goDetail(id: number) {
   router.push({ path: `/detail/${id}`, query: { from: '/trade' } })
 }
-
-function handleToggleFav(item: TradeItem, e: MouseEvent) {
-  e.stopPropagation()
-  e.preventDefault()
-  if (!userStore.isLoggedIn) {
-    showToast('请先登录后再收藏哦～', 'warn')
-    setTimeout(() => {
-      router.push({ path: '/login', query: { redirect: '/trade' } })
-    }, 800)
-    return
-  }
-  const r = userStore.toggleFavorite({
-    id: item.id,
-    title: item.title,
-    price: item.price,
-    category: item.category,
-    desc: item.description,
-  })
-  showToast(r.msg, r.ok ? 'success' : 'warn')
-}
-
-function goFavorites() {
-  router.push('/favorites')
-}
 </script>
 
 <template>
@@ -92,20 +53,7 @@ function goFavorites() {
         <p class="sub">浏览同学们发布的二手好物，支持按成色、分类、地点筛选</p>
         <span class="count">共 {{ trades.length }} 件商品</span>
       </div>
-      <div class="right">
-        <button
-          v-if="userStore.isLoggedIn"
-          class="fav-entry"
-          @click="goFavorites"
-        >
-          ⭐ 我的收藏 ({{ userStore.favoritesCount }})
-        </button>
-      </div>
     </header>
-
-    <Transition name="fade">
-      <div v-if="toastMsg" class="toast" :class="toastType">{{ toastMsg }}</div>
-    </Transition>
 
     <section v-if="loading" class="state">⏳ 数据加载中...</section>
     <section v-else-if="error" class="state state--err">
@@ -124,6 +72,8 @@ function goFavorites() {
         @click="goDetail(item.id)"
       >
         <ItemCard
+          :id="item.id"
+          type="trade"
           :title="item.title"
           :description="item.description"
           :tag="item.category"
@@ -136,17 +86,7 @@ function goFavorites() {
                 <span class="price">¥{{ item.price }}</span>
                 <span class="cond">{{ item.condition }}</span>
               </div>
-              <div class="right-foot">
-                <span class="pub">{{ item.publisher }}</span>
-                <button
-                  class="fav-btn"
-                  :class="{ favored: userStore.isFavorited(item.id) }"
-                  :title="userStore.isFavorited(item.id) ? '已收藏，点击取消' : '点击收藏'"
-                  @click="handleToggleFav(item, $event)"
-                >
-                  {{ userStore.isFavorited(item.id) ? '❤️' : '🤍' }}
-                </button>
-              </div>
+              <span class="pub">{{ item.publisher }}</span>
             </div>
           </template>
         </ItemCard>

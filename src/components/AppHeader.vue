@@ -1,15 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import AppNav from './AppNav.vue'
 
 const userStore = useUserStore()
 const router = useRouter()
-
-const isLoggedIn = computed(() => userStore.isLoggedIn)
-const displayName = computed(() => userStore.displayName)
-const displayAvatar = computed(() => userStore.displayAvatar)
 
 function goHome() {
   router.push('/home')
@@ -32,10 +27,10 @@ function doLogout() {
       </div>
 
       <div class="header-right">
-        <template v-if="isLoggedIn">
+        <template v-if="userStore.user.isLoggedIn">
           <router-link to="/profile" class="user-entry" title="进入个人中心">
-            <span class="mini-avatar">{{ displayAvatar }}</span>
-            <span class="user-name">{{ displayName }}</span>
+            <span class="mini-avatar">{{ userStore.user.avatar }}</span>
+            <span class="user-name">{{ userStore.displayName }}</span>
           </router-link>
           <router-link to="/profile" class="mini-btn">👤 我的</router-link>
           <button class="mini-btn logout-btn" @click="doLogout" title="退出当前账号">🚪 退出</button>

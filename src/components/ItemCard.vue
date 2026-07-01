@@ -15,17 +15,44 @@
     <div v-if="$slots.footer" class="footer">
       <slot name="footer" />
     </div>
+
+    <div class="fav-bar">
+      <button
+        type="button"
+        class="fav-toggle"
+        :class="{ favored: favoriteStore.isFavorite(type, id) }"
+        @click.stop="handleToggle"
+      >
+        {{ favoriteStore.isFavorite(type, id) ? '⭐ 已收藏' : '🤍 收藏' }}
+      </button>
+    </div>
   </article>
 </template>
 
 <script setup lang="ts">
-defineProps<{
+import { useFavoriteStore, type FavoriteType } from '@/stores/favorite'
+
+const props = defineProps<{
+  type: FavoriteType
+  id: number
   title: string
   description: string
   tag?: string
   location?: string
   time?: string
 }>()
+
+const favoriteStore = useFavoriteStore()
+
+function handleToggle() {
+  favoriteStore.toggleFavorite({
+    type: props.type,
+    id: props.id,
+    title: props.title,
+    description: props.description,
+    location: props.location ?? '',
+  })
+}
 </script>
 
 <style scoped>
@@ -85,5 +112,44 @@ defineProps<{
 
 .footer {
   margin-top: 12px;
+}
+
+.fav-bar {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.fav-toggle {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #6b7280;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.18s;
+  font-family: inherit;
+}
+
+.fav-toggle:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  background: #eff6ff;
+}
+
+.fav-toggle.favored {
+  background: #fef3c7;
+  border-color: #f59e0b;
+  color: #b45309;
+  font-weight: 600;
+}
+
+.fav-toggle.favored:hover {
+  background: #fee2e2;
+  border-color: #ef4444;
+  color: #991b1b;
 }
 </style>

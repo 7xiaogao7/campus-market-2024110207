@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
-const isLoggedIn = computed(() => userStore.isLoggedIn)
+const isLoggedIn = computed(() => userStore.user.isLoggedIn)
 
 interface NavItem {
   to: string

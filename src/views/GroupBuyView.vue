@@ -70,6 +70,8 @@ function progress(item: GroupBuyItem) {
       <ItemCard
         v-for="item in groupBuys"
         :key="item.id"
+        :id="item.id"
+        type="groupBuy"
         :title="item.title"
         :description="item.description"
         :tag="item.type"

@@ -65,6 +65,8 @@ function goDetail(id: number) {
       <ItemCard
         v-for="item in lostFounds"
         :key="item.id"
+        :id="item.id"
+        type="lostFound"
         :title="item.title"
         :description="item.description"
         :tag="item.type === 'lost' ? '🔍 寻物启事' : '📦 失物招领'"

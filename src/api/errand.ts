@@ -13,15 +13,12 @@ export interface ErrandItem {
   description: string
 }
 
-export type CreateErrandPayload = Omit<ErrandItem, 'id' | 'publisher'>
+export type CreateErrandPayload = Omit<ErrandItem, 'id'>
 
 export function getErrands() {
   return http.get<ErrandItem[]>('/errands')
 }
 
 export function createErrand(payload: CreateErrandPayload) {
-  return http.post<ErrandItem>('/errands', {
-    ...payload,
-    publisher: '校园用户'
-  })
+  return http.post<ErrandItem>('/errands', payload)
 }

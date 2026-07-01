@@ -13,15 +13,12 @@ export interface GroupBuyItem {
   description: string
 }
 
-export type CreateGroupBuyPayload = Omit<GroupBuyItem, 'id' | 'publisher'>
+export type CreateGroupBuyPayload = Omit<GroupBuyItem, 'id'>
 
 export function getGroupBuys() {
   return http.get<GroupBuyItem[]>('/groupBuys')
 }
 
 export function createGroupBuy(payload: CreateGroupBuyPayload) {
-  return http.post<GroupBuyItem>('/groupBuys', {
-    ...payload,
-    publisher: '校园用户'
-  })
+  return http.post<GroupBuyItem>('/groupBuys', payload)
 }

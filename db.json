@@ -142,6 +142,19 @@
       "description": "很新",
       "publisher": "校园用户",
       "id": "Kct-toH1MuY"
+    },
+    {
+      "title": "物理书",
+      "category": "教材资料",
+      "price": 15,
+      "condition": "九成五新",
+      "location": "东四",
+      "publishTime": "2026-07-01 10:41",
+      "image": "",
+      "status": "open",
+      "description": "99新",
+      "publisher": "小杨同学（2023级·计算机科学与技术学院）",
+      "id": "8kbAvLkb4Fo"
     }
   ],
   "lostFounds": [

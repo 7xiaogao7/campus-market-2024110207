@@ -65,6 +65,8 @@ function goDetail(id: number) {
       <ItemCard
         v-for="item in errands"
         :key="item.id"
+        :id="item.id"
+        type="errand"
         :title="item.title"
         :description="item.description"
         :tag="item.taskType"
