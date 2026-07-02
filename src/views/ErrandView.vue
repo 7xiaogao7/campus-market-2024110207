@@ -30,8 +30,7 @@ async function loadData() {
   try {
     const res = await getErrands()
     errands.value = res.data as ErrandItem[]
-  } catch (e: any) {
-    console.warn('[Errand] API 请求失败，使用本地 fallback 数据：', e)
+  } catch {
     errands.value = FALLBACK_ERRANDS
   } finally {
     loading.value = false

@@ -20,17 +20,21 @@
       <button
         type="button"
         class="fav-toggle"
-        :class="{ favored: favoriteStore.isFavorite(type, id) }"
+        :class="{ favored: favored, 'not-logged': !userStore.isLoggedIn }"
         @click.stop="handleToggle"
       >
-        {{ favoriteStore.isFavorite(type, id) ? '⭐ 已收藏' : '🤍 收藏' }}
+        <template v-if="!userStore.isLoggedIn">🔒 收藏</template>
+        <template v-else-if="favored">⭐ 已收藏</template>
+        <template v-else>🤍 收藏</template>
       </button>
     </div>
   </article>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useFavoriteStore, type FavoriteType } from '@/stores/favorite'
+import { useUserStore } from '@/stores/user'
 
 const props = defineProps<{
   type: FavoriteType
@@ -43,8 +47,15 @@ const props = defineProps<{
 }>()
 
 const favoriteStore = useFavoriteStore()
+const userStore = useUserStore()
+
+const favored = computed(() => favoriteStore.isFavorite(props.type, props.id))
 
 function handleToggle() {
+  if (!userStore.isLoggedIn) {
+    alert('请先登录后再收藏')
+    return
+  }
   favoriteStore.toggleFavorite({
     type: props.type,
     id: props.id,
@@ -132,6 +143,7 @@ function handleToggle() {
   cursor: pointer;
   transition: 0.18s;
   font-family: inherit;
+  font-weight: 500;
 }
 
 .fav-toggle:hover {
@@ -141,15 +153,30 @@ function handleToggle() {
 }
 
 .fav-toggle.favored {
-  background: #fef3c7;
+  background: linear-gradient(135deg, #fff7d6 0%, #ffe28a 100%);
   border-color: #f59e0b;
   color: #b45309;
-  font-weight: 600;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.18);
 }
 
 .fav-toggle.favored:hover {
-  background: #fee2e2;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
   border-color: #ef4444;
   color: #991b1b;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.22);
+}
+
+.fav-toggle.not-logged {
+  border-style: dashed;
+  border-color: #c7d2fe;
+  color: #6366f1;
+  background: #f5f3ff;
+}
+
+.fav-toggle.not-logged:hover {
+  border-color: #6366f1;
+  background: #eef2ff;
+  color: #4338ca;
 }
 </style>

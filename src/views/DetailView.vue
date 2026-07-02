@@ -29,16 +29,16 @@ const FALLBACK = {
     { id: 10, title: '优衣库纯棉 T 恤 M 码', category: '服饰鞋包', price: 35, condition: '全新未拆', location: '南区 1 栋', publisher: '经管学院 2024 级', publishTime: '2026-06-05 19:30', image: '', status: 'open', description: '买多了一件，白色基础款，百搭不过时，吊牌未拆，原价 99。' },
   ] as TradeItem[],
   lostFounds: [
-    { id: 1, title: '寻找黑色校园卡', type: 'lost' as const, itemName: '校园卡', location: '一食堂附近', eventTime: '2026-06-02 12:10', contact: '站内消息联系', status: 'open', description: '校园卡卡套为黑色，内有学生证。' },
-    { id: 2, title: '拾到蓝色雨伞', type: 'found' as const, itemName: '雨伞', location: '教学楼 A 区', eventTime: '2026-06-02 18:40', contact: '站内消息联系', status: 'open', description: '雨伞放在 A 区一楼值班室。' },
-    { id: 3, title: '寻找银色 AirPods Pro', type: 'lost' as const, itemName: '耳机', location: '图书馆 3 楼自习区', eventTime: '2026-06-03 15:30', contact: '138****5678', status: 'open', description: '白色充电盒有小黄人贴纸，拾到者重金酬谢！' },
-    { id: 4, title: '拾到黑色双肩书包', type: 'found' as const, itemName: '书包', location: '体育馆篮球场', eventTime: '2026-06-03 19:00', contact: '站内消息联系', status: 'open', description: '书包内有笔记本和水杯，暂存于体育馆门卫室。' },
-    { id: 5, title: '寻找遗失的灰色兔耳伞', type: 'lost' as const, itemName: '雨伞', location: '教学楼 C 栋 5 楼走廊', eventTime: '2026-06-04 08:20', contact: 'QQ 22334455', status: 'open', description: '灰色长柄伞，伞柄有一对兔耳朵装饰，是好朋友送的生日礼物，非常重要！' },
-    { id: 6, title: '拾到学生证（计算机学院）', type: 'found' as const, itemName: '学生证', location: '二食堂二楼', eventTime: '2026-06-04 12:45', contact: '站内消息联系', status: 'open', description: '学生证姓名为两个字，计算机学院，请失主带身份验证领取。' },
-    { id: 7, title: '寻找粉色保温杯', type: 'lost' as const, itemName: '保温杯', location: '教学楼 B 栋 3 楼教室', eventTime: '2026-06-05 10:30', contact: '站内消息联系', status: 'open', description: '膳魔师粉色保温杯，杯身贴有 LINE FRIENDS 贴纸，对我很重要！' },
-    { id: 8, title: '拾到一副黑框眼镜', type: 'found' as const, itemName: '眼镜', location: '图书馆 5 楼角落座位', eventTime: '2026-06-05 21:00', contact: '图书馆服务台', status: 'open', description: '黑框近视眼镜，度数不详，已交图书馆一楼服务台保管。' },
-    { id: 9, title: '寻找白色充电宝', type: 'lost' as const, itemName: '充电宝', location: '三食堂或操场看台', eventTime: '2026-06-06 13:00', contact: '微信 wx123456', status: 'open', description: '小米 20000mAh 白色充电宝，有一角摔痕，里面有重要充电线一起丢失。' },
-    { id: 10, title: '拾到一串门禁卡', type: 'found' as const, itemName: '门禁卡', location: '实验楼 A 栋大厅', eventTime: '2026-06-06 17:20', contact: '实验楼物业前台', status: 'open', description: '两张实验室门禁卡 + 一张校园卡，已交实验楼前台，请失主前去认领。' },
+    { id: 1, title: '寻找黑色校园卡', type: 'lost' as const, itemName: '校园卡', location: '一食堂附近', eventTime: '2026-06-02 12:10', contact: '站内消息联系', publisher: '计算机学院 2023 级学生', status: 'open', description: '校园卡卡套为黑色，内有学生证。' },
+    { id: 2, title: '拾到蓝色雨伞', type: 'found' as const, itemName: '雨伞', location: '教学楼 A 区', eventTime: '2026-06-02 18:40', contact: '站内消息联系', publisher: '数学学院学生', status: 'open', description: '雨伞放在 A 区一楼值班室。' },
+    { id: 3, title: '寻找银色 AirPods Pro', type: 'lost' as const, itemName: '耳机', location: '图书馆 3 楼自习区', eventTime: '2026-06-03 15:30', contact: '138****5678', publisher: '外国语学院学生', status: 'open', description: '白色充电盒有小黄人贴纸，拾到者重金酬谢！' },
+    { id: 4, title: '拾到黑色双肩书包', type: 'found' as const, itemName: '书包', location: '体育馆篮球场', eventTime: '2026-06-03 19:00', contact: '站内消息联系', publisher: '体育学院同学', status: 'open', description: '书包内有笔记本和水杯，暂存于体育馆门卫室。' },
+    { id: 5, title: '寻找遗失的灰色兔耳伞', type: 'lost' as const, itemName: '雨伞', location: '教学楼 C 栋 5 楼走廊', eventTime: '2026-06-04 08:20', contact: 'QQ 22334455', publisher: '设计学院 2022 级', status: 'open', description: '灰色长柄伞，伞柄有一对兔耳朵装饰，是好朋友送的生日礼物，非常重要！' },
+    { id: 6, title: '拾到学生证（计算机学院）', type: 'found' as const, itemName: '学生证', location: '二食堂二楼', eventTime: '2026-06-04 12:45', contact: '站内消息联系', publisher: '经管学院学生', status: 'open', description: '学生证姓名为两个字，计算机学院，请失主带身份验证领取。' },
+    { id: 7, title: '寻找粉色保温杯', type: 'lost' as const, itemName: '保温杯', location: '教学楼 B 栋 3 楼教室', eventTime: '2026-06-05 10:30', contact: '站内消息联系', publisher: '土木学院学生', status: 'open', description: '膳魔师粉色保温杯，杯身贴有 LINE FRIENDS 贴纸，对我很重要！' },
+    { id: 8, title: '拾到一副黑框眼镜', type: 'found' as const, itemName: '眼镜', location: '图书馆 5 楼角落座位', eventTime: '2026-06-05 21:00', contact: '图书馆服务台', publisher: '图书馆志愿者', status: 'open', description: '黑框近视眼镜，度数不详，已交图书馆一楼服务台保管。' },
+    { id: 9, title: '寻找白色充电宝', type: 'lost' as const, itemName: '充电宝', location: '三食堂或操场看台', eventTime: '2026-06-06 13:00', contact: '微信 wx123456', publisher: '毕业生同学', status: 'open', description: '小米 20000mAh 白色充电宝，有一角摔痕，里面有重要充电线一起丢失。' },
+    { id: 10, title: '拾到一串门禁卡', type: 'found' as const, itemName: '门禁卡', location: '实验楼 A 栋大厅', eventTime: '2026-06-06 17:20', contact: '实验楼物业前台', publisher: '实验楼保安', status: 'open', description: '两张实验室门禁卡 + 一张校园卡，已交实验楼前台，请失主前去认领。' },
   ] as LostFoundItem[],
   groupBuys: [
     { id: 1, title: '周五晚火锅拼单', type: '拼餐', targetCount: 6, currentCount: 3, deadline: '2026-06-05 17:00', location: '学校南门', publisher: '计算机学院学生', status: 'open', description: 'AA 制，人数够后统一预约。' },
@@ -147,8 +147,7 @@ async function loadItem() {
     if (found) {
       item.value = found
     }
-  } catch (e) {
-    console.warn('[Detail] API 请求失败，降级使用本地 fallback 数据：', e)
+  } catch {
     fallbackMode.value = true
   }
 

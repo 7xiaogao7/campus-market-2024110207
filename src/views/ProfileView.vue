@@ -37,14 +37,17 @@ async function loadMyPublished() {
     myTrades.value = (tr.data ?? []).filter((i) => i.publisher === pubName)
     myGroupBuys.value = (gb.data ?? []).filter((i) => i.publisher === pubName)
     myErrands.value = (er.data ?? []).filter((i) => i.publisher === pubName)
-  } catch (e) {
-    console.warn('[Profile] 加载我的发布失败：', e)
+  } catch {
   } finally {
     loading.value = false
   }
 }
 
-onMounted(loadMyPublished)
+onMounted(() => {
+  if (userStore.isLoggedIn) {
+    loadMyPublished()
+  }
+})
 
 function handleRemoveFavorite(item: FavoriteItem) {
   favoriteStore.removeFavorite(item.type, item.id)
@@ -60,129 +63,141 @@ function doLogout() {
 
 <template>
   <div class="uc-page">
-    <!-- ① 用户资料区 -->
-    <section class="uc-card uc-profile">
-      <div class="avatar">{{ userStore.user.avatar }}</div>
-      <div class="info">
-        <h2 class="name">{{ userStore.user.name }}</h2>
-        <div class="meta-row">
-          <span class="tag t1">🏫 {{ userStore.user.college }}</span>
-          <span class="tag t2">📅 {{ userStore.user.grade }}</span>
+    <section v-if="!userStore.isLoggedIn" class="uc-card uc-guest">
+      <div class="guest-illust">🔒</div>
+      <h2 class="guest-title">您还未登录</h2>
+      <p class="guest-desc">登录后可查看个人资料、管理我的收藏和发布记录，开启校园互助之旅～</p>
+      <div class="guest-actions">
+        <button class="btn btn-primary" @click="router.push('/login')">🔑 前往登录</button>
+        <button class="btn" @click="router.push('/register')">🎁 还没账号？去注册</button>
+      </div>
+    </section>
+
+    <template v-else>
+      <!-- ① 用户资料区 -->
+      <section class="uc-card uc-profile">
+        <div class="avatar">{{ userStore.user.avatar }}</div>
+        <div class="info">
+          <h2 class="name">{{ userStore.user.name }}</h2>
+          <div class="meta-row">
+            <span class="tag t1">🏫 {{ userStore.user.college }}</span>
+            <span class="tag t2">📅 {{ userStore.user.grade }}</span>
+          </div>
+          <p class="bio">{{ userStore.user.bio || '这个人很懒，还没有填写个性简介～' }}</p>
         </div>
-        <p class="bio">{{ userStore.user.bio || '这个人很懒，还没有填写个性简介～' }}</p>
-      </div>
-      <div class="actions">
-        <button class="btn btn-primary" @click="router.push('/publish')">📝 去发布</button>
-        <button class="btn btn-plain" @click="doLogout">🚪 退出登录</button>
-      </div>
-    </section>
+        <div class="actions">
+          <button class="btn btn-primary" @click="router.push('/publish')">📝 去发布</button>
+          <button class="btn btn-plain" @click="doLogout">🚪 退出登录</button>
+        </div>
+      </section>
 
-    <!-- ② 我的收藏区 -->
-    <section class="uc-card">
-      <h3 class="uc-title">⭐ 我的收藏 <small>共 {{ favoriteStore.favoriteCount }} 条</small></h3>
-      <EmptyState
-        v-if="favoriteStore.favorites.length === 0"
-        icon="⭐"
-        text="还没有收藏过任何内容，快去列表页挑点喜欢的吧～"
-      >
-        <button class="empty-btn" @click="router.push('/trade')">🛒 逛逛二手市场</button>
-      </EmptyState>
-      <div v-else class="fav-grid">
-        <article v-for="f in favoriteStore.favorites" :key="`${f.type}-${f.id}`" class="fav-card">
-          <header>
-            <span class="type-tag">{{ typeLabelMap[f.type] }}</span>
-            <span class="fav-loc">📍 {{ f.location }}</span>
-          </header>
-          <h4>{{ f.title }}</h4>
-          <p class="desc">{{ f.description }}</p>
-          <footer>
-            <button class="btn btn-sm btn-danger" @click="handleRemoveFavorite(f)">💔 取消收藏</button>
-          </footer>
-        </article>
-      </div>
-    </section>
+      <!-- ② 我的收藏区 -->
+      <section class="uc-card">
+        <h3 class="uc-title">⭐ 我的收藏 <small>共 {{ favoriteStore.favoriteCount }} 条</small></h3>
+        <EmptyState
+          v-if="favoriteStore.favorites.length === 0"
+          icon="⭐"
+          text="还没有收藏过任何内容，快去列表页挑点喜欢的吧～"
+        >
+          <button class="empty-btn" @click="router.push('/trade')">🛒 逛逛二手市场</button>
+        </EmptyState>
+        <div v-else class="fav-grid">
+          <article v-for="f in favoriteStore.favorites" :key="`${f.type}-${f.id}`" class="fav-card">
+            <header>
+              <span class="type-tag">{{ typeLabelMap[f.type] }}</span>
+              <span class="fav-loc">📍 {{ f.location }}</span>
+            </header>
+            <h4>{{ f.title }}</h4>
+            <p class="desc">{{ f.description }}</p>
+            <footer>
+              <button class="btn btn-sm btn-danger" @click="handleRemoveFavorite(f)">💔 取消收藏</button>
+            </footer>
+          </article>
+        </div>
+      </section>
 
-    <!-- ③ 我的发布区 -->
-    <section class="uc-card">
-      <h3 class="uc-title">📝 我的发布</h3>
-      <div v-if="loading" class="state">⏳ 加载发布中...</div>
-      <EmptyState
-        v-else-if="myTrades.length + myGroupBuys.length + myErrands.length === 0"
-        icon="📝"
-        text="还没有发布过内容，来发布你的第一条校园信息吧～"
-      >
-        <button class="empty-btn" @click="router.push('/publish')">✨ 立即发布</button>
-      </EmptyState>
-      <template v-else>
-        <section v-if="myTrades.length" class="pub-block">
-          <h4 class="block-title">🛒 二手交易（{{ myTrades.length }}）</h4>
-          <div class="card-grid">
-            <ItemCard
-              v-for="item in myTrades"
-              :key="item.id"
-              :id="item.id"
-              type="trade"
-              :title="item.title"
-              :description="item.description"
-              :tag="item.category"
-              :location="item.location"
-              :time="item.publishTime"
-            >
-              <template #footer>
-                <div class="trade-foot">
-                  <span class="price">¥{{ item.price }}</span>
-                  <span class="cond">{{ item.condition }}</span>
-                </div>
-              </template>
-            </ItemCard>
-          </div>
-        </section>
-        <section v-if="myGroupBuys.length" class="pub-block">
-          <h4 class="block-title">👥 拼单搭子（{{ myGroupBuys.length }}）</h4>
-          <div class="card-grid">
-            <ItemCard
-              v-for="item in myGroupBuys"
-              :key="item.id"
-              :id="item.id"
-              type="groupBuy"
-              :title="item.title"
-              :description="item.description"
-              :tag="item.type"
-              :location="item.location"
-              :time="`截止 ${item.deadline}`"
-            >
-              <template #footer>
-                <div class="gb-foot">
-                  <span>👥 {{ item.currentCount }} / {{ item.targetCount }}</span>
-                </div>
-              </template>
-            </ItemCard>
-          </div>
-        </section>
-        <section v-if="myErrands.length" class="pub-block">
-          <h4 class="block-title">🏃 跑腿委托（{{ myErrands.length }}）</h4>
-          <div class="card-grid">
-            <ItemCard
-              v-for="item in myErrands"
-              :key="item.id"
-              :id="item.id"
-              type="errand"
-              :title="item.title"
-              :description="item.description"
-              :tag="item.taskType"
-              :location="`${item.from} → ${item.to}`"
-              :time="`截止 ${item.deadline}`"
-            >
-              <template #footer>
-                <div class="er-foot">
-                  <span>💰 酬劳 ¥{{ item.reward }}</span>
-                </div>
-              </template>
-            </ItemCard>
-          </div>
-        </section>
-      </template>
-    </section>
+      <!-- ③ 我的发布区 -->
+      <section class="uc-card">
+        <h3 class="uc-title">📝 我的发布</h3>
+        <div v-if="loading" class="state">⏳ 加载发布中...</div>
+        <EmptyState
+          v-else-if="myTrades.length + myGroupBuys.length + myErrands.length === 0"
+          icon="📝"
+          text="还没有发布过内容，来发布你的第一条校园信息吧～"
+        >
+          <button class="empty-btn" @click="router.push('/publish')">✨ 立即发布</button>
+        </EmptyState>
+        <template v-else>
+          <section v-if="myTrades.length" class="pub-block">
+            <h4 class="block-title">🛒 二手交易（{{ myTrades.length }}）</h4>
+            <div class="card-grid">
+              <ItemCard
+                v-for="item in myTrades"
+                :key="item.id"
+                :id="item.id"
+                type="trade"
+                :title="item.title"
+                :description="item.description"
+                :tag="item.category"
+                :location="item.location"
+                :time="item.publishTime"
+              >
+                <template #footer>
+                  <div class="trade-foot">
+                    <span class="price">¥{{ item.price }}</span>
+                    <span class="cond">{{ item.condition }}</span>
+                  </div>
+                </template>
+              </ItemCard>
+            </div>
+          </section>
+          <section v-if="myGroupBuys.length" class="pub-block">
+            <h4 class="block-title">👥 拼单搭子（{{ myGroupBuys.length }}）</h4>
+            <div class="card-grid">
+              <ItemCard
+                v-for="item in myGroupBuys"
+                :key="item.id"
+                :id="item.id"
+                type="groupBuy"
+                :title="item.title"
+                :description="item.description"
+                :tag="item.type"
+                :location="item.location"
+                :time="`截止 ${item.deadline}`"
+              >
+                <template #footer>
+                  <div class="gb-foot">
+                    <span>👥 {{ item.currentCount }} / {{ item.targetCount }}</span>
+                  </div>
+                </template>
+              </ItemCard>
+            </div>
+          </section>
+          <section v-if="myErrands.length" class="pub-block">
+            <h4 class="block-title">🏃 跑腿委托（{{ myErrands.length }}）</h4>
+            <div class="card-grid">
+              <ItemCard
+                v-for="item in myErrands"
+                :key="item.id"
+                :id="item.id"
+                type="errand"
+                :title="item.title"
+                :description="item.description"
+                :tag="item.taskType"
+                :location="`${item.from} → ${item.to}`"
+                :time="`截止 ${item.deadline}`"
+              >
+                <template #footer>
+                  <div class="er-foot">
+                    <span>💰 酬劳 ¥{{ item.reward }}</span>
+                  </div>
+                </template>
+              </ItemCard>
+            </div>
+          </section>
+        </template>
+      </section>
+    </template>
   </div>
 </template>
 
@@ -491,5 +506,35 @@ function doLogout() {
   .card-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ---- 未登录访客态 ---- */
+.uc-guest {
+  text-align: center;
+  padding: 56px 32px;
+  background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+  border-color: #bfdbfe;
+}
+.guest-illust {
+  font-size: 56px;
+  margin-bottom: 14px;
+}
+.guest-title {
+  margin: 0 0 10px;
+  font-size: 22px;
+  color: #111827;
+}
+.guest-desc {
+  margin: 0 auto 20px;
+  max-width: 460px;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.guest-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 </style>

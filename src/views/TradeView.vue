@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import ItemCard from '@/components/ItemCard.vue'
 import EmptyState from '@/components/EmptyState.vue'
+import LoadingState from '@/components/LoadingState.vue'
+import ErrorState from '@/components/ErrorState.vue'
+import SearchBar from '@/components/SearchBar.vue'
 import { getTrades, type TradeItem } from '@/api/trade'
 
 const router = useRouter()
 
 const loading = ref(false)
 const error = ref('')
-const trades = ref<TradeItem[]>([])
+const searchKeyword = ref('')
+const allTrades = ref<TradeItem[]>([])
 
 const FALLBACK_TRADES: TradeItem[] = [
   { id: 1, title: '九成新机械键盘', category: '数码配件', price: 89, condition: '九成新', location: '东区宿舍', publisher: '软件工程 2023 级学生', publishTime: '2026-06-01 10:20', image: '', status: 'open', description: '键盘使用正常，因更换设备转让。' },
@@ -24,19 +28,32 @@ const FALLBACK_TRADES: TradeItem[] = [
   { id: 10, title: '优衣库纯棉 T 恤 M 码', category: '服饰鞋包', price: 35, condition: '全新未拆', location: '南区 1 栋', publisher: '经管学院 2024 级', publishTime: '2026-06-05 19:30', image: '', status: 'open', description: '买多了一件，白色基础款，百搭不过时，吊牌未拆，原价 99。' },
 ]
 
+const filteredTrades = computed(() => {
+  const kw = searchKeyword.value.trim().toLowerCase()
+  if (!kw) return allTrades.value
+  return allTrades.value.filter((it) =>
+    [it.title, it.description, it.category, it.location, String(it.publisher ?? '')]
+      .join(' ')
+      .toLowerCase()
+      .includes(kw),
+  )
+})
+
 async function loadData() {
   loading.value = true
   error.value = ''
   try {
     const res = await getTrades()
-    trades.value = res.data as TradeItem[]
-  } catch (e: any) {
-    console.warn('[Trade] API 请求失败，使用本地 fallback 数据：', e)
-    trades.value = FALLBACK_TRADES
+    allTrades.value = res.data as TradeItem[]
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : '加载二手商品失败，请稍后再试'
+    allTrades.value = FALLBACK_TRADES
   } finally {
     loading.value = false
   }
 }
+
+function onSearch() {}
 
 onMounted(loadData)
 
@@ -51,22 +68,38 @@ function goDetail(id: number) {
       <div class="left">
         <h1>🛒 二手交易</h1>
         <p class="sub">浏览同学们发布的二手好物，支持按成色、分类、地点筛选</p>
-        <span class="count">共 {{ trades.length }} 件商品</span>
+        <span class="count">共 {{ filteredTrades.length }} 件商品{{ searchKeyword.trim() ? `（搜索：${searchKeyword.trim()}）` : '' }}</span>
       </div>
     </header>
 
-    <section v-if="loading" class="state">⏳ 数据加载中...</section>
-    <section v-else-if="error" class="state state--err">
-      ❌ {{ error }}
-      <button class="retry" @click="loadData">🔄 重新加载</button>
-    </section>
-    <EmptyState v-else-if="trades.length === 0" icon="🛒" text="暂无二手商品，快去发布第一件吧～">
-      <button class="empty-btn" @click="router.push('/publish')">📝 去发布</button>
+    <SearchBar
+      v-model="searchKeyword"
+      placeholder="搜索商品名称、分类、成色、地点或发布人…"
+      @search="onSearch"
+    />
+
+    <LoadingState v-if="loading" text="正在加载二手好物…" />
+    <ErrorState
+      v-else-if="error && filteredTrades.length === 0"
+      :error="error"
+      @retry="loadData"
+    />
+    <EmptyState
+      v-else-if="filteredTrades.length === 0"
+      icon="🛒"
+      :text="searchKeyword.trim() ? `没有找到与「${searchKeyword.trim()}」相关的二手商品` : '暂无二手商品，快去发布第一件吧～'"
+    >
+      <template v-if="!searchKeyword.trim()">
+        <button class="empty-btn" @click="router.push('/publish')">📝 去发布</button>
+      </template>
+      <template v-else>
+        <button class="empty-btn" @click="searchKeyword = ''">✕ 清空搜索条件</button>
+      </template>
     </EmptyState>
 
     <section v-else class="card-grid">
       <article
-        v-for="item in trades"
+        v-for="item in filteredTrades"
         :key="item.id"
         class="trade-card"
         @click="goDetail(item.id)"

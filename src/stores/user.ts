@@ -1,5 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { getUsers, type UserItem } from '@/api/user'
+
+export const STORAGE_KEY = 'campus_market_current_user_v1'
 
 export interface CurrentUser {
   id: string
@@ -8,88 +11,180 @@ export interface CurrentUser {
   grade: string
   avatar: string
   bio: string
-  isLoggedIn: boolean
+  isLoggedIn?: boolean
+}
+
+function isValidUser(u: unknown): u is CurrentUser {
+  if (!u || typeof u !== 'object') return false
+  const o = u as Record<string, unknown>
+  return typeof o.id === 'string' && typeof o.name === 'string'
+}
+
+function emptyShell(loggedIn: boolean): CurrentUser {
+  return {
+    id: '',
+    name: '',
+    college: '',
+    grade: '',
+    avatar: '',
+    bio: '',
+    isLoggedIn: loggedIn,
+  }
 }
 
 export const useUserStore = defineStore('user', () => {
-  const user = ref<CurrentUser>({
-    id: '20231234',
-    name: '小杨同学',
-    college: '计算机科学与技术学院',
-    grade: '2023级',
-    avatar: '😀',
-    bio: '软件工程专业 · 热爱二手好物分享，接靠谱跑腿小单 ☕',
-    isLoggedIn: true,
+  const currentUser = ref<CurrentUser | null>(null)
+  const isLoggedIn = ref<boolean>(false)
+
+  function persist() {
+    if (currentUser.value) {
+      const { isLoggedIn: _drop, ...rest } = currentUser.value
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(rest))
+    } else {
+      localStorage.removeItem(STORAGE_KEY)
+    }
+  }
+
+  const displayName = computed(() => {
+    const u = currentUser.value
+    if (!u) return '未登录用户'
+    const parts = [u.grade, u.college].filter(Boolean)
+    if (!parts.length) return u.name
+    return `${u.name}（${parts.join('·')}）`
   })
 
-  const displayName = computed(
-    () => `${user.value.name}（${user.value.grade}·${user.value.college}）`,
-  )
+  const user = computed<CurrentUser>(() => {
+    if (currentUser.value) {
+      return { ...currentUser.value, isLoggedIn: isLoggedIn.value }
+    }
+    return emptyShell(isLoggedIn.value)
+  })
 
-  function updateProfile(payload: Partial<Omit<CurrentUser, 'id' | 'isLoggedIn'>>) {
-    Object.assign(user.value, payload)
-  }
+  async function login(
+    usernameOrObj: string | Record<string, unknown>,
+    maybePassword?: string,
+  ): Promise<{ ok: boolean; message: string }> {
+    let username = ''
+    let password = ''
 
-  function login(_payload?: unknown): { ok: boolean; message: string } {
-    const p = _payload as { account?: string } | undefined
-    if (p?.account) {
-      const acc = String(p.account)
-      if (acc.length >= 4) {
-        const tail = acc.slice(-4)
-        let guessName = user.value.name
-        if (/^1\d{10}$/.test(acc)) guessName = `同学${tail}`
-        else if (/^\d+$/.test(acc)) guessName = `学号${tail}同学`
-        Object.assign(user.value, {
-          name: guessName,
-          id: /^\d+$/.test(acc) ? acc : user.value.id,
-        })
+    if (typeof usernameOrObj === 'string') {
+      username = usernameOrObj.trim()
+      password = String(maybePassword ?? '')
+    } else if (usernameOrObj && typeof usernameOrObj === 'object') {
+      const obj = usernameOrObj
+      const account = [obj.account, obj.phone, obj.username, obj.name]
+        .map((v) => (typeof v === 'string' ? v.trim() : ''))
+        .find((v) => !!v) ?? ''
+      username = account
+      const pwd = [obj.password, obj.pwd]
+        .map((v) => (typeof v === 'string' ? v : ''))
+        .find((v) => !!v)
+      password = pwd ?? ''
+      if (!password && typeof obj.code === 'string' && obj.code.length >= 4) {
       }
     }
-    user.value.isLoggedIn = true
-    return { ok: true, message: `登录成功，欢迎回来，${user.value.name}！` }
-  }
 
-  function register(
-    payload?: Partial<{
-      phone: string
-      code: string
-      name: string
-      avatar: string
-      pwd: string
-      college: string
-      campus: string
-      grade: string
-      major: string
-    }>,
-  ): { ok: boolean; message: string } {
-    const p = payload ?? {}
-    const merge: Partial<Omit<CurrentUser, 'id' | 'isLoggedIn'>> = {}
-    if (p.name) merge.name = p.name
-    if (p.avatar) merge.avatar = p.avatar
-    if (p.college) merge.college = p.college
-    if (p.grade) merge.grade = p.grade
-    const bioParts: string[] = []
-    if (p.major) bioParts.push(p.major + '专业')
-    if (p.campus) bioParts.push(p.campus)
-    if (bioParts.length) merge.bio = bioParts.join(' · ')
-    if (p.phone && /^1\d{10}$/.test(p.phone)) {
-      user.value.id = p.phone.slice(-8)
+    if (!username) {
+      throw new Error('请输入账号')
     }
-    updateProfile(merge)
-    user.value.isLoggedIn = true
-    return { ok: true, message: '🎉 注册成功，欢迎加入校园轻集市！' }
+
+    try {
+      const query: Partial<UserItem> = { phone: username }
+      const { data } = await getUsers(query)
+      if (!data || data.length === 0) {
+        const { data: byName } = await getUsers({ name: username } as Partial<UserItem>)
+        if (!byName || byName.length === 0) {
+          throw new Error('账号不存在，请先注册')
+        }
+        const match = password ? byName.filter((u) => u.password === password) : byName
+        if (!match.length) {
+          throw new Error('账号或密码错误')
+        }
+        const u = match[0]!
+        currentUser.value = {
+          id: u.id,
+          name: u.name,
+          college: u.college,
+          grade: u.grade,
+          avatar: u.avatar || '😀',
+          bio: u.bio || '',
+        }
+      } else {
+        const match = password ? data.filter((u) => u.password === password) : data
+        if (!match.length) {
+          throw new Error('账号或密码错误')
+        }
+        const u = match[0]!
+        currentUser.value = {
+          id: u.id,
+          name: u.name,
+          college: u.college,
+          grade: u.grade,
+          avatar: u.avatar || '😀',
+          bio: u.bio || '',
+        }
+      }
+
+      isLoggedIn.value = true
+      persist()
+      return {
+        ok: true,
+        message: `登录成功，欢迎回来，${currentUser.value.name}！`,
+      }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : '登录失败，请稍后重试'
+      throw new Error(msg)
+    }
   }
 
   function logout() {
-    user.value.isLoggedIn = false
+    currentUser.value = null
+    isLoggedIn.value = false
+    localStorage.removeItem(STORAGE_KEY)
   }
 
+  function restoreLogin() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY)
+      if (!raw) return
+      const parsed = JSON.parse(raw)
+      if (!isValidUser(parsed)) {
+        localStorage.removeItem(STORAGE_KEY)
+        return
+      }
+      currentUser.value = {
+        id: parsed.id,
+        name: parsed.name,
+        college: parsed.college || '',
+        grade: parsed.grade || '',
+        avatar: parsed.avatar || '😀',
+        bio: parsed.bio || '',
+      }
+      isLoggedIn.value = true
+    } catch {
+      localStorage.removeItem(STORAGE_KEY)
+      currentUser.value = null
+      isLoggedIn.value = false
+    }
+  }
+
+  function updateProfile(payload: Partial<Omit<CurrentUser, 'id' | 'isLoggedIn'>>) {
+    if (currentUser.value) {
+      Object.assign(currentUser.value, payload)
+      persist()
+    }
+  }
+
+  restoreLogin()
+
   return {
-    user,
+    currentUser,
+    isLoggedIn,
     displayName,
-    updateProfile,
+    user,
     login,
-    register,
     logout,
+    restoreLogin,
+    updateProfile,
   }
 })

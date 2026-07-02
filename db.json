@@ -513,5 +513,40 @@
       "description": "两天喂食换水就行，鼠鼠很乖不咬人，食物和说明都备好，可进门用备用钥匙。"
     }
   ],
+  "users": [
+    {
+      "id": "20231234",
+      "name": "小杨同学",
+      "college": "计算机科学与技术学院",
+      "grade": "2023级",
+      "avatar": "😀",
+      "bio": "软件工程专业 · 热爱二手好物分享，接靠谱跑腿小单 ☕",
+      "password": "123456",
+      "phone": "13800138000",
+      "createdAt": "2026-01-15 09:30"
+    },
+    {
+      "phone": "12121212121",
+      "password": "121212",
+      "name": "毛川",
+      "college": "计算机科学与技术学院",
+      "grade": "2024级",
+      "avatar": "😀",
+      "bio": "",
+      "createdAt": "2026-07-02 11:58",
+      "id": "0sVKVYV70XI"
+    },
+    {
+      "phone": "15151515151",
+      "password": "151515",
+      "name": "孔阳",
+      "college": "法学院",
+      "grade": "2024级",
+      "avatar": "😀",
+      "bio": "",
+      "createdAt": "2026-07-02 14:52",
+      "id": "zYBTU15wcck"
+    }
+  ],
   "$schema": "./node_modules/json-server/schema.json"
 }

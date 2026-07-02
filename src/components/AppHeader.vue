@@ -13,7 +13,7 @@ function goHome() {
 function doLogout() {
   if (confirm('确定退出登录吗？')) {
     userStore.logout()
-    router.push('/login')
+    router.push('/home')
   }
 }
 </script>
@@ -27,7 +27,7 @@ function doLogout() {
       </div>
 
       <div class="header-right">
-        <template v-if="userStore.user.isLoggedIn">
+        <template v-if="userStore.isLoggedIn">
           <router-link to="/profile" class="user-entry" title="进入个人中心">
             <span class="mini-avatar">{{ userStore.user.avatar }}</span>
             <span class="user-name">{{ userStore.displayName }}</span>

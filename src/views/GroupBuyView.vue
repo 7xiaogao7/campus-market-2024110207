@@ -30,8 +30,7 @@ async function loadData() {
   try {
     const res = await getGroupBuys()
     groupBuys.value = res.data as GroupBuyItem[]
-  } catch (e: any) {
-    console.warn('[GroupBuy] API 请求失败，使用本地 fallback 数据：', e)
+  } catch {
     groupBuys.value = FALLBACK_GROUPBUYS
   } finally {
     loading.value = false
